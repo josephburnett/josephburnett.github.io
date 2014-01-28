@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wordpress Simple Navigation</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" />
+<link rel="stylesheet" href="../css/prettify.css" type="text/css" />
+<script type="text/javascript" src="../js/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<div id="top">
+</div>
+<div id="wrapper">
+<div id="banner_wrapper"><a class="ajax left" href="../index.html"><div id="banner"><h1>JosephBurnett.com</h1></div></a></div>
+<div id="navigation">
+<div id="breadcrumbs">
+<ul>
+<li><a class="ajax left" href="../code.html">Code</a><span class="right-arrow">&raquo</span></li>
+<li class="current">Wordpress Simple Navigation</li>
+</ul>
+</div>
+<div id="prev">
+<a href="pack-a-52-card-deck-in-32-bytes.html" class="ajax left hidden"><div><span>undefined</span></div></a>
+</div>
+<div id="next">
+<a href="five-minute-holiday-cards.html" class="ajax right hidden"><div><span>undefined</span></div></a>
+</div>
+</div> <!-- end navigation -->
+<div id="viewing-window">
+<div class="content source_file">
+<div class="text_above"><p>This Wordpress plugin creates a simple widget that prints Previous and Next links. The number of posts (or pages) in either direction is given in parenthesis.
+
+This plugin also solves the ambiguity of posts in multiple categories.</p></div>
+<div class="source_code"><pre class="prettyprint">&lt?php
+/**
+ * Plugin name: Simple Nav
+ * Author: Joseph Burnett
+ * Author URI: http://www.josephburnett.com
+ * Plugin URI: http://www.josephburnett.com
+ * Version: 1.0
+ * Description: Adds a widget which will provide simple navigation links to adjacent posts (or pages).
+ **/
+
+class SimpleNav extends WP_Widget {
+
+    private static $class_initialized = false;
+    private static $simple_nav_category = null;
+    private static $is_single = false;
+    private static $is_category = false;
+
+    private static $nav_initialized = false;
+    private static $next_link = null;
+    private static $next_count = 0;
+    private static $prev_link = null;
+    private static $prev_count = 0;
+    
+    # Initialize members used by entire class
+    private static function init() {
+        global $wp;
+
+        error_log("DEBUG initializing");
+        if (SimpleNav::$class_initialized == false) {
+            if (is_single()) {
+                SimpleNav::$is_single = true;
+                SimpleNav::$is_category = false;
+                SimpleNav::$simple_nav_category = SimpleNav::determine_post_category();
+            }
+            if (is_category() or !empty($wp-&gtquery_vars['s'])) {
+                SimpleNav::$is_single = false;
+                SimpleNav::$is_category = true;
+                SimpleNav::$simple_nav_category = SimpleNav::determine_category();
+            }
+            SimpleNav::$class_initialized = true;
+       }
+    }
+
+    # Initialize members used in rendering navigation
+    private static function init_nav() {
+        error_log("DEBUG initializing links");
+        if ( !SimpleNav::$nav_initialized ) {
+            error_log("DEBUG rendering links and finding counts");
+            SimpleNav::$next_link = SimpleNav::get_link(false);
+            SimpleNav::$next_count = SimpleNav::get_count(false);
+            SimpleNav::$prev_link = SimpleNav::get_link(true);
+            SimpleNav::$prev_count = SimpleNav::get_count(true);
+            SimpleNav::$nav_initialized = true;
+        }
+    }
+
+    # Widget constructor
+    function SimpleNav() {
+        parent::WP_Widget(false, $name = 'Simple Nav');
+    }
+
+    # Render the widget
+    function widget($args, $instance) {
+
+        SimpleNav::init();
+        SimpleNav::init_nav();
+
+        $prev_text = "Previous";
+        $next_text = "Next";
+
+        $right_arrow = "&raquo";
+        $left_arrow = "&laquo;";
+
+        $prev_class = "simple_nav_prev";
+        $next_class = "simple_nav_next";
+
+        echo "&ltdiv class=\"simple_nav\"&gt\n";
+
+        if ( SimpleNav::$is_single ) {
+
+            if ( !empty( SimpleNav::$prev_link ) )
+                echo "&ltspan class=\"$prev_class\"&gt&lta href=\"" . SimpleNav::$prev_link . "\"&gt$left_arrow $prev_text (" . SimpleNav::$prev_count . ")&lt/a&gt&lt/span&gt";
+
+            if ( !empty( SimpleNav::$next_link ) )
+                echo "&ltspan class=\"$next_class\"&gt&lta href=\"" . SimpleNav::$next_link . "\"&gt$next_text (" . SimpleNav::$next_count . ") $right_arrow&lt/a&gt&lt/span&gt";
+        }
+
+        if ( SimpleNav::$is_category ) {
+
+            if ( !empty( SimpleNav::$prev_link ) ) {
+                if ( SimpleNav::$prev_count == 1 )
+                    echo "&ltspan class=\"$prev_class\"&gt&lta href=\"" . SimpleNav::$prev_link . "\"&gt$left_arrow $prev_text (" . SimpleNav::$prev_count . " page)&lt/a&gt&lt/span&gt";
+                else
+                    echo "&ltspan class=\"$prev_class\"&gt&lta href=\"" . SimpleNav::$prev_link . "\"&gt$left_arrow $prev_text (" . SimpleNav::$prev_count . " pages)&lt/a&gt&lt/span&gt";
+            }
+
+            if ( !empty( SimpleNav::$next_link ) ) {
+                if ( SimpleNav::$next_count == 1 )
+                    echo "&ltspan class=\"$next_class\"&gt&lta href=\"" . SimpleNav::$next_link . "\"&gt$next_text (" . SimpleNav::$next_count . " page) $right_arrow&lt/a&gt&lt/span&gt";
+                else
+                    echo "&ltspan class=\"$next_class\"&gt&lta href=\"" . SimpleNav::$next_link . "\"&gt$next_text (" . SimpleNav::$next_count . " pages) $right_arrow&lt/a&gt&lt/span&gt";
+            }
+        }
+
+        echo "&lt/div&gt\n";
+    }
+
+    # Update the instance of the widget
+    function update($new_instance, $old_instance) {				
+        return $old_instance; // nothing to do
+    }
+
+    # Print the form to configure the widget
+    function form($instance) {
+        echo "&ltp&gtA simple set of navigation links to the adjacent posts (or pages). ";
+        echo "The number of posts (or pages) in either direction is given in parenthesis.&lt/p&gt";
+    }
+
+    # Determine which category we're viewing
+    private static function determine_category() {
+        global $wp;
+        return $wp-&gtquery_vars['category_name'];
+    }
+
+    # Determine which single category (of possibily many) we are navigating within
+    private static function determine_post_category() {
+        global $post, $wp;
+
+        # Get the current post id
+        $post_id = $wp-&gtquery_vars['p'];
+
+        if ( empty( $post_id ) ) {
+            error_log("DEBUG couldn't get current post id");
+            return '';
+        }
+
+        # Get categories for the current post
+        error_log("DEBUG finding categories for post " . $post_id);
+        $post_categories = wp_get_post_categories( $post_id );
+        $cats = array();
+        $cat_slugs = array();
+        foreach($post_categories as $c){
+            $cat = get_category( $c );
+            $cats[] = array( 'name' =&gt $cat-&gtname, 'slug' =&gt $cat-&gtslug, 'id' =&gt $cat-&gtterm_id );
+            $cat_slugs[] = $cat-&gtslug;
+            error_log("DEBUG adding category: " . $cat-&gtslug);
+        }
+
+        if (count($cats) &lt 1) {
+            # Post has no categories, so can't have a simple previous and next
+            error_log("DEBUG post has no categories, returning empty");
+            return '';
+        }
+
+        # What's the category we should be working in?
+        $simple_nav_category = $wp-&gtquery_vars['simple_nav_category'];
+        
+        if ( !in_array($simple_nav_category, $cat_slugs) ) {
+            # Current post doesn't have the given category, so we ignore it
+            error_log("DEBUG post doesn't have given category, ignoring " . $simple_nav_category);
+            $simple_nav_category = '';
+        }
+        
+        if ( empty( $simple_nav_category ) ) {
+            # No category was specified, so choose the first one
+            $simple_nav_category = $cats[0]['slug'];
+            error_log("DEBUG no simple_nav_category given, choosing " . $simple_nav_category);
+        }
+
+        error_log("DEBUG returning simple nav category: " . $simple_nav_category);
+        return $simple_nav_category;
+    }
+
+    # Get a link to an adjacent object
+    private static function get_link($prev = true) {
+
+        $link = null;
+
+        if ( SimpleNav::$is_single ) {
+            $post = SimpleNav::adjacent_post( $prev, false );
+            if ( !empty( $post ) )
+                $link = get_permalink( $post-&gtID );
+        }
+
+        if ( SimpleNav::$is_category ) {
+            $link = SimpleNav::adjacent_page_link( $prev );
+        }
+
+        return $link;
+    }
+
+    # Get a count of adjacent objects
+    private static function get_count($prev = true) {
+
+        $count = null;
+
+        if ( SimpleNav::$is_single )
+            $count = SimpleNav::adjacent_post( $prev, true );
+
+        if ( SimpleNav::$is_category )
+            $count = SimpleNav::adjacent_page_count( $prev ); 
+
+        return $count;
+    }
+
+    # Get link to adjacent page of posts
+    private static function adjacent_page_link($previous = true, $count_only = false) {
+        global $wp_query;
+
+        $current_page = max( 1, get_query_var('paged') );
+        $last_page = max( 1, $wp_query-&gtmax_num_pages );
+
+        error_log("DEBUG current page: " . $current_page);
+        error_log("DEBUG last page: " . $last_page);
+
+        $link = null;
+
+        if ( $previous ) {
+
+            if ( $current_page &gt 1 )
+                $link = get_pagenum_link( $current_page - 1 );
+
+        } else {
+
+            if ( ($last_page - $current_page + 1) &gt 1 )
+                $link = get_pagenum_link( $current_page + 1 );
+
+        }
+
+        error_log("DEBUG returning adjacent page link: " . $link);
+        return $link;
+    }
+
+    # Get count of adjacent pages of posts
+    private static function adjacent_page_count($previous = true, $count_only = false) {
+        global $wp_query;
+
+        $current_page = max( 1, get_query_var('paged') );
+        $last_page = max( 1, $wp_query-&gtmax_num_pages );
+
+        error_log("DEBUG current page: " . $current_page);
+        error_log("DEBUG last page: " . $last_page);
+
+        $count = 0;
+
+        if ( $previous ) {
+
+            if ( $current_page &gt 1 )
+                $count = $current_page - 1;
+
+        } else {
+
+            if ( ($last_page - $current_page + 1) &gt 1 )
+                $count = $last_page - $current_page;
+
+        }
+
+        error_log("DEBUG return adjacent page count: " . $count);
+        return $count;
+    }
+
+    # Get information about adjacent posts
+    private static function adjacent_post($previous = true, $count_only = false) {
+        global $post, $wpdb;
+
+        if ( empty( SimpleNav::$simple_nav_category ) ) {
+            error_log("DEBUG couldn't determine simple_nav_category");
+            return null;
+        }
+
+        # Build the SQL query
+        $op = $previous ? '&lt' : '&gt';
+        $current_post_date = $post-&gtpost_date;
+        $order = $previous ? 'DESC' : 'ASC';
+
+        $query  = "SELECT " . ($count_only ? "count(*)" : "p.*") . " FROM $wpdb-&gtposts AS p ";
+        $query .= "INNER JOIN $wpdb-&gtterm_relationships AS tr ON p.ID = tr.object_id ";
+        $query .= "INNER JOIN $wpdb-&gtterm_taxonomy AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id ";
+        $query .= "INNER JOIN $wpdb-&gtterms AS t ON tt.term_id = t.term_id ";
+        $query .= "WHERE p.post_date $op '%s' ";
+        $query .= "AND p.post_type = 'post' ";
+        $query .= "AND p.post_status = 'publish' ";
+        $query .= "AND tt.taxonomy = 'category' ";
+        $query .= "AND t.slug = '%s' ";
+        if (!$count_only) {
+            $query .= "ORDER BY p.post_date $order ";
+            $query .= "LIMIT 1";
+        }
+        
+        $prepared_query = $wpdb-&gtprepare($query, $current_post_date, SimpleNav::$simple_nav_category);
+
+        error_log("DEBUG " . $prepared_query);
+
+        # Look for a cache hit
+        $query_key = 'adjacent_post_' . md5($query);
+        $result = wp_cache_get($query_key, 'counts');
+        if ( false !== $result )
+            return $result;
+
+        # Cache miss
+        if ($count_only) {
+            $result = $wpdb-&gtget_var($prepared_query);
+            if ( empty( $result ) )
+                $result = 0; // empty results means a count of zero
+        } else {
+            $result = $wpdb-&gtget_row($prepared_query);
+        }
+        if ( null === $result ) {
+            error_log("DEBUG nothing returned from query");
+            $result = '';
+        }
+
+        # Cache the result
+        wp_cache_set($query_key, $result, 'counts');
+        return $result;
+    }
+    
+    # Update a post link with the current simple nav category
+    public static function post_link($permalink) {
+
+        SimpleNav::init();
+
+        if ( empty( SimpleNav::$simple_nav_category ) ) {
+            error_log("DEBUG not adding simple_nav_category to permalink");
+            return $permalink;
+        } else {
+            error_log("DEBUG adding simple_nav_category to permalink: " . SimpleNav::$simple_nav_category);
+            return $permalink . "&simple_nav_category=" . SimpleNav::$simple_nav_category;
+        }
+    }
+}
+
+# Register the widget
+add_action('widgets_init', create_function('', 'register_widget("SimpleNav");'));
+
+# Add the simple_nav_category url parameter
+add_filter('query_vars', 'add_simple_nav_category');
+function add_simple_nav_category( $qvars ) {
+    $qvars[] = 'simple_nav_category';
+    return $qvars;
+}
+
+# Hook into the post_link filter
+add_action('post_link', array('SimpleNav', 'post_link'));
+
+?&gt</pre></div>
+</div>
+</div> <!-- end viewing-window -->
+</div> <!-- end wrapper -->
+</body>
+</html>

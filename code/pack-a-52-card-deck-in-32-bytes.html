@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pack a 52 Card Deck in 32 Bytes</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" />
+<link rel="stylesheet" href="../css/prettify.css" type="text/css" />
+<script type="text/javascript" src="../js/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<div id="top">
+</div>
+<div id="wrapper">
+<div id="banner_wrapper"><a class="ajax left" href="../index.html"><div id="banner"><h1>JosephBurnett.com</h1></div></a></div>
+<div id="navigation">
+<div id="breadcrumbs">
+<ul>
+<li><a class="ajax left" href="../code.html">Code</a><span class="right-arrow">&raquo</span></li>
+<li class="current">Pack a 52 Card Deck in 32 Bytes</li>
+</ul>
+</div>
+<div id="prev">
+<a href="wordpress-image-replacement-plugin.html" class="ajax left hidden"><div><span>undefined</span></div></a>
+</div>
+<div id="next">
+<a href="wordpress-simple-navigation.html" class="ajax right hidden"><div><span>undefined</span></div></a>
+</div>
+</div> <!-- end navigation -->
+<div id="viewing-window">
+<div class="content source_file">
+<div class="text_above"><p>Here's an interesting problem: "Encode the order of a 52-card deck in 32 bytes".  It's not as easy as it sounds! My solution is below.</p></div>
+<div class="source_code"><pre class="prettyprint">#include &ltstdio.h&gt
+#include &ltstdlib.h&gt
+
+/* Encode array of ordinals [0 .. n-1] by using an ordered set as 
+ * a binary search tree, removing the each leaf traversed until the
+ * set has 1 member.  Traversal paths are the encoding. */
+int encodeOrder(int* input, int* output, int n) {
+
+    int i,j;
+    int* o = malloc(sizeof(int)*n);         /* ordered set */
+    for (i = 0; i &lt n; i++) { o[i] = i; }
+    int s = n;                              /* ordered set size */
+    int k = 0;                              /* output index */
+
+    for (i = 0; i &lt n; i++) {
+
+        int a = 0;                          /* interval [a,b] */
+        int b = s-1;
+        int c;                              /* center of [a,b] */
+
+        while (b - a &gt 0) {                 /* binary search in o */
+            int x;
+            c = (b - a) / 2 + a;
+            if (o[c] &gt= input[i]) {
+                output[k++] = 0;            /* set next "bit" to 0 */
+                b = c;
+            } else {
+                output[k++] = 1;            /* set next "bit" to 1 */
+                c ++;
+                a = c;
+            }
+        }
+
+        for (j = b+1; j &lt s; j++) {         /* remove ordinal from o */
+            o[j-1] = o[j];
+        } 
+        s --;
+    }
+
+    free(o);
+    return k;
+}
+
+/* Traverse ordered set as in encoding, returning and removing each 
+ * leaf as the original ordinals. */
+int decodeOrder(int* input, int* output, int n) {
+
+    int i,j,l;
+    int* o = malloc(sizeof(int)*n);         /* ordered set */
+    for (i = 0; i &lt n; i++) { o[i] = i; }
+    int s = n;                              /* ordered set size */
+    int k = 0;                              /* input index */
+
+    for (i = 0, k = 0; i &lt n-1; i++) {
+
+        int a = 0;                          /* interval [a,b] */
+        int b = s-1;
+        int c;                              /* center */
+
+        while (b - a &gt 0) {                 /* binary search in o */
+            int x;
+            c = (b - a) / 2 + a;
+            if (input[k] == 0)              /* if bit is 0, go left */
+            {
+                b = c;
+            } else {
+                c ++;
+                a = c;
+            }
+            k ++;
+        }
+        output[i] = o[c];                   /* set next ordinal */
+
+        for (j = c+1; j &lt s; j++) {         /* remove ordinal from o */
+            o[j-1] = o[j];
+        } 
+        s --;
+    }
+    output[n-1] = o[0];                     /* last ordinal is trivial */
+
+    free(o);
+    return k;
+}
+</pre></div>
+</div>
+</div> <!-- end viewing-window -->
+</div> <!-- end wrapper -->
+</body>
+</html>
