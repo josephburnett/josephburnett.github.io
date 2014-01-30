@@ -298,4 +298,12 @@ p {
     line-height: 14px;
 }
 
+.post ol {
+    padding: 10px;
+    list-style: decimal;
+    list-style-position: inside; 
+}
 
+.post-list ul {
+    padding: 10px;
+}

@@ -1,9 +1,20 @@
 ---
 layout: default
 ---
-<h2>{{ page.title }}</h2>
-<p class="meta">{{ page.date | date_to_string }}</p>
+    <div id="navigation">
+      <div id="breadcrumbs">
+      <ul>
+        <li class="ajax left"><a href="/writing.html">Writing</a><span class="right-arrow">&raquo</span></li>
+        <li class="current">{{ page.title }}</li>
+      </ul>
+      </div>
+    </div>
+    <div id="viewing-window">
+      <div class="content">
+        <div class="post">
 
-<div class="post">
-{{ content }}
-</div>
+          {{ content }}
+
+        </div>
+      </div>
+    </div>
