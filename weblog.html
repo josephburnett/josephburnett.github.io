@@ -1,0 +1,33 @@
+---
+layout: default
+title: Writing
+---
+    <div id="navigation">
+      <div id="breadcrumbs">
+        <ul>
+          <li class="current">Weblog</li>
+        </ul>
+      </div>
+    </div>
+    <div id="viewing-window">
+      <div class="content">
+        <div class="post-list">
+          <ul>
+            {% for post in site.categories.writing %}
+
+<li>
+<a class="ajax right" href="{{ post.url }}">
+<div class="photo image_thumbnail"><img src="/images/A1.png" /></div>
+<div class="photo caption">{{ post.excerpt }}</div>
+</a>
+</li>
+
+<!--            <li>
+              <h4><a href="{{ post.url }}">{{ post.title }}</a></h4>
+              <p>{{ post.excerpt }}</p>
+            </li> -->
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>

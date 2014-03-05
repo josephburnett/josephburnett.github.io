@@ -219,7 +219,7 @@ p {
 
 .content.home li {
     width: 180px;
-    padding: 60px 20px 60px 73px;
+    padding: 60px 20px 0px 73px;
 }
 .content.home li img {
     width: 180px;

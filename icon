@@ -1,0 +1,9 @@
+#!/bin/bash
+
+convert -size 100x100 canvas:white -gravity Center \
+        -font NewCenturySchlbk-Roman -pointsize 30 -kerning 2 \
+        -fill "$2" \
+        -annotate +0+5 "$1" \
+        -fill none -stroke "#c3b7aa" -strokewidth 1 \
+        -draw "rectangle 0,0 99,99" \
+        $1.png 
