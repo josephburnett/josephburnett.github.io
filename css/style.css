@@ -298,12 +298,52 @@ p {
     line-height: 14px;
 }
 
-.post ol {
+.content.weblog .post {
+    padding: 20px 30px;
+}
+.content.weblog .post ol {
     padding: 10px;
     list-style: decimal;
     list-style-position: inside; 
 }
+.content.weblog .post p,
+.content.weblog .post li {
+    padding: 0;
+    font-size: 80%;
+}
 
-.post-list ul {
+.content.weblog .post-list ul .image_thumbnail {
+    width: 120px;
+    float: left;
+}
+.content.weblog .post-list li {
+    clear: both;
+    float: left;
+    padding: 15px;
+}
+.content.weblog .post-list .image_thumbnail img {
     padding: 10px;
+}
+.content.weblog .post-list .summary {
+    width: 420px;
+    text-align: left;
+    padding: 10px 0 0 20px;
+    float: left;
+}
+.content.weblog .post-list .summary p {
+    padding: 0;
+    font-size: 80%;
+}
+.content.weblog .post-list .summary .date {
+    font-size: 80%;
+    float: right;
+    text-align: right;
+    width: 30%;
+}
+.content.weblog .post-list .summary .title {
+    width: 70%;
+    float: left;
+}
+.content.weblog .post-list .summary .excerpt {
+    clear: both;
 }
