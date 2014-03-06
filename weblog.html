@@ -14,23 +14,17 @@ title: Writing
         <div class="post-list">
           <ul>
             {% for post in site.categories.weblog %}
-
-<li>
-<a class="ajax right" href="{{ post.url }}">
-<div class="image_thumbnail"><img src="/images/A1.png" /></div>
-<div class="summary">
-  <div class="title"><h4>{{ post.title }}</h4></div>
-  <div class="date">{{ post.date | date: "%D" }}</div>
-  <div class="excerpt">{{ post.excerpt }}</div>
-</div>
-</a>
-</li>
-
-<!--            <li>
-              <h4><a href="{{ post.url }}">{{ post.title }}</a></h4>
-              <p>{{ post.excerpt }}</p>
-            </li> -->
-            {% endfor %}
+            <li>
+              <a class="ajax right" href="{{ post.url }}">
+                <div class="image_thumbnail"><img src="/images/{{ post.icon }}.png" /></div>
+                <div class="summary">
+                  <div class="title"><h4>{{ post.title }}</h4></div>
+                  <div class="date">{{ post.date | date: "%D" }}</div>
+                  <div class="excerpt">{{ post.excerpt }}</div>
+                </div>
+              </a>
+            </li>
+          {% endfor %}
           </ul>
         </div>
       </div>

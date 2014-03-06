@@ -209,6 +209,11 @@ p {
     padding: 0 10px;
 }
 
+em {
+    font-style: normal;
+    text-decoration: underline;
+    font-size: 100%;
+}
 /* Element specific styles */
 
 #breadcrumbs li.current {
@@ -308,7 +313,7 @@ p {
 }
 .content.weblog .post p,
 .content.weblog .post li {
-    padding: 0;
+    padding: 0 0 15px 0;
     font-size: 80%;
 }
 
@@ -331,8 +336,9 @@ p {
     float: left;
 }
 .content.weblog .post-list .summary p {
-    padding: 0;
+    padding: 12px 0 0 0;
     font-size: 80%;
+    line-height: 1.1;
 }
 .content.weblog .post-list .summary .date {
     font-size: 80%;
@@ -347,3 +353,15 @@ p {
 .content.weblog .post-list .summary .excerpt {
     clear: both;
 }
+
+.content.weblog .post blockquote {
+    padding: 20px 40px;
+    background-color: #f1f2ff;
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+.content.weblog .post blockquote p {
+    padding: 0px;
+    line-height: 2;
+}
+

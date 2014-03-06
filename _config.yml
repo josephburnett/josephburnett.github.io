@@ -2,3 +2,4 @@ name: Your New Jekyll Site
 markdown: redcarpet
 pygments: true
 port: 8000
+permalink: /:categories/:title.html
