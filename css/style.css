@@ -163,6 +163,13 @@ body {
     opacity: 0.5;
 }
 
+#footer {
+    width: 600px;
+    text-align: center;
+    padding: 100px 0 50px 0;
+    float: left;
+}
+
 /* General styles */
 body {
     color: #53473a;
@@ -218,6 +225,17 @@ em {
 
 #breadcrumbs li.current {
     font-size: 140%;
+}
+
+#footer a {
+    color: #a9aacf;
+}
+#footer a:hover {
+    color: #c86e0e;
+}
+#footer .links li {
+    display: inline;
+    padding: 0 40px;
 }
 
 /* Content specific styles */
