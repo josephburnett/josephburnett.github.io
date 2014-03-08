@@ -249,6 +249,9 @@ em {
     height: 180px;
 }
 
+.content.page {
+    padding: 30px;
+}
 
 .content.photograph {
     /*text-align: center;*/
@@ -321,16 +324,20 @@ em {
     line-height: 14px;
 }
 
-.content.weblog .post {
+.content.weblog .post,
+.content.static .page {
     padding: 20px 30px;
 }
-.content.weblog .post ol {
+.content.weblog .post ol,
+.content.static .page ol {
     padding: 10px;
     list-style: decimal;
     list-style-position: inside; 
 }
 .content.weblog .post p,
-.content.weblog .post li {
+.content.weblog .post li,
+.content.static .page p,
+.content.static .page li {
     padding: 0 0 15px 0;
     font-size: 80%;
 }
