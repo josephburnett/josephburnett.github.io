@@ -1,4 +1,6 @@
-name: Your New Jekyll Site
+name: www.josephburnett.com
+description: "Joseph Burnett's personal website"
+url: "http://www.josephburnett.com"
 markdown: redcarpet
 pygments: true
 port: 8000
