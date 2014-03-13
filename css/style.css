@@ -342,11 +342,13 @@ em {
     font-size: 80%;
 }
 
-.content.static .page a {
+.content.static .page a,
+.content.weblog .post a {
     font-size: 100%;
     color: #898abf;
 }
-.content.static .page a:hover {
+.content.static .page a:hover,
+.content.weblog .post a:hover {
     color: #c86e0e;
 }
 
