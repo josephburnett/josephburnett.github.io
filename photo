@@ -2,9 +2,12 @@
 
 use strict;
 
+die "Usage: <sub_folder> <image>..." unless @ARGV >= 2;
+
+my $sub_folder = @ARGV[0];
 my ($prev, $next);
 
-for (my $i = 0; $i < @ARGV; $i++) {
+for (my $i = @ARGV - 1; $i > 0; $i--) {
 
   my $file = strip($ARGV[$i]);
   die "Not a .jpg file" unless $file =~ /\.jpg$/;
@@ -24,8 +27,8 @@ for (my $i = 0; $i < @ARGV; $i++) {
   my $md_file = $year . "-" . $month . "-" . $day . "-" . $base . ".md";
   print "Creating markdown file $md_file\n";
 
-  if ($i < @ARGV - 1) {
-    $next = @ARGV[$i+1];
+  if ($i > 1) {
+    $next = @ARGV[$i-1];
     $next =~ s/\.jpg/\.html/;
   } else {
     $next = 0;
@@ -37,8 +40,8 @@ for (my $i = 0; $i < @ARGV; $i++) {
   print $MD_FILE "---\n";
   print $MD_FILE "layout: photo\n";
   print $MD_FILE "title: $file\n";
-  print $MD_FILE "image_main: $file\n";
-  print $MD_FILE "image_thumbnail: $thumb_file\n";
+  print $MD_FILE "image_main: $sub_folder/$file\n";
+  print $MD_FILE "image_thumbnail: $sub_folder/$thumb_file\n";
   print $MD_FILE "left: $prev\n" if $prev;
   print $MD_FILE "right: $next\n" if $next;
   print $MD_FILE "---\n";
