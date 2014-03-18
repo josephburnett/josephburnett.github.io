@@ -1,0 +1,4 @@
+#!/bin/bash
+
+convert $1.jpg -resize "100x100^" -gravity Center -crop 100x100+0+0 $1-100.jpg
+echo $1-100.jpg

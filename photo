@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+
+use strict;
+
+my ($prev, $next);
+
+for (my $i = 0; $i < @ARGV; $i++) {
+
+  my $file = strip($ARGV[$i]);
+  die "Not a .jpg file" unless $file =~ /\.jpg$/;
+  my $base = $file;
+  $base =~ s/\.jpg$//;
+  print "Processing file $file\n";
+
+  my $exif_date = strip(`identify -verbose $file  | grep exif:DateTimeOriginal: | grep -o "\\d\\d\\d\\d:\\d\\d:\\d\\d"`);
+  die "Couldn't read exif date" unless $exif_date;
+  my ($year, $month, $day) = split /:/, $exif_date;
+  print "Date: $year $month $day\n";
+
+  my $thumb_file = $base . "-100.jpg";
+  `convert $file -resize "100x100^" -gravity Center -crop 100x100+0+0 $thumb_file`;
+  print "Created thumbnail: $thumb_file\n";
+
+  my $md_file = $year . "-" . $month . "-" . $day . "-" . $base . ".md";
+  print "Creating markdown file $md_file\n";
+
+  if ($i < @ARGV - 1) {
+    $next = @ARGV[$i+1];
+    $next =~ s/\.jpg/\.html/;
+  } else {
+    $next = 0;
+  }
+  print "Prev html file is $prev\n" if $prev;
+  print "Next html file is $next\n" if $next;
+
+  open (my $MD_FILE, '>', $md_file) or die "Couldn't create file $md_file";
+  print $MD_FILE "---\n";
+  print $MD_FILE "layout: photo\n";
+  print $MD_FILE "title: $file\n";
+  print $MD_FILE "image_main: $file\n";
+  print $MD_FILE "image_thumbnail: $thumb_file\n";
+  print $MD_FILE "left: $prev\n" if $prev;
+  print $MD_FILE "right: $next\n" if $next;
+  print $MD_FILE "---\n";
+  close $MD_FILE;
+
+  $prev = $base . ".html";
+}
+
+sub strip {
+  my $string = $_[0];
+  $string =~ s/^\s+//;
+  $string =~ s/\s+$//;
+  return $string;
+}
