@@ -1,0 +1,6 @@
+      <ul>
+        {% for crumb in page.breadcrumbs %}
+        <li class="ajax left"><a href="{{ crumb.url }}">{{ crumb.name }}</a><span class="right-arrow">&raquo</span></li>
+        {% endfor %}
+        <li class="current">{{ page.title }}</li>
+      </ul>

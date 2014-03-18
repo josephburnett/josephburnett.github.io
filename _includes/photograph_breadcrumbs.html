@@ -1,0 +1,9 @@
+      <ul>
+        <li class="ajax left"><a href="/photographs.html">Photographs</a><span class="right-arrow">&raquo</span></li>
+        {% for category in page.categories %}
+          {% unless category == 'photographs' %}
+          <li class="ajax left"><a href="/photographs/{{ category }}.html">{{ category | capitalize }}</a><span class="right-arrow">&raquo</span></li>
+          {% endunless %}
+        {% endfor %}
+        <li class="current">{{ page.title }}</li>
+      </ul>

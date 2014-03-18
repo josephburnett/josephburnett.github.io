@@ -1,0 +1,40 @@
+---
+layout: default
+---
+<div id="navigation">
+  <div id="breadcrumbs">
+
+    {% include photograph_breadcrumbs.html %}
+
+  </div>
+
+  {% if page.left %}
+  <div id="next">
+    <a href="{{ page.left }}" class="ajax left"><div><span>undefined</span></div></a>
+  </div>
+  {% endif %}
+
+  {% if page.right %}
+  <div id="next">
+    <a href="{{ page.right }}" class="ajax right"><div><span>undefined</span></div></a>
+  </div>
+  {% endif %}
+
+  <!-- <div id="progress-bar"><div style="width:7%;"></div></div> -->
+</div> <!-- end navigation -->
+<div id="viewing-window">
+  <div class="content photograph">
+  <div class="image_main"><img src="{{ page.image_main }}" /></div>
+
+  {% if page.caption %}
+  <div class="caption">{{ page.caption }}</div>
+  {% endif %}
+
+  {% if page.has_content %}
+  <div class="post">
+    {{ content }}
+  </div>
+  {% endif %}
+
+  </div>
+</div> <!-- end viewing-window -->

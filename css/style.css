@@ -325,11 +325,13 @@ em {
 }
 
 .content.weblog .post,
-.content.static .page {
+.content.static .page,
+.content.photograph .post {
     padding: 20px 30px;
 }
 .content.weblog .post ol,
-.content.static .page ol {
+.content.static .page ol,
+.content.photograph .post ol {
     padding: 10px;
     list-style: decimal;
     list-style-position: inside; 
@@ -337,18 +339,22 @@ em {
 .content.weblog .post p,
 .content.weblog .post li,
 .content.static .page p,
-.content.static .page li {
+.content.static .page li,
+.content.photograph .post p,
+.content.photograph .post li {
     padding: 0 0 15px 0;
     font-size: 80%;
 }
 
 .content.static .page a,
-.content.weblog .post a {
+.content.weblog .post a,
+.content.photograph .post a {
     font-size: 100%;
     color: #898abf;
 }
 .content.static .page a:hover,
-.content.weblog .post a:hover {
+.content.weblog .post a:hover,
+.content.photograph .post a:hover {
     color: #c86e0e;
 }
 
@@ -389,13 +395,15 @@ em {
     clear: both;
 }
 
-.content.weblog .post blockquote {
+.content.weblog .post blockquote,
+.content.photograph .post blockquote {
     padding: 20px 40px;
     background-color: #f1f2ff;
     margin-bottom: 25px;
     margin-top: 10px;
 }
-.content.weblog .post blockquote p {
+.content.weblog .post blockquote p,
+.content.photograph .post blockquote p {
     padding: 0px;
     line-height: 2;
 }
