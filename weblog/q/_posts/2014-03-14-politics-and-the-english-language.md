@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "Politics and the English Language"
 icon: Q2
 ---
 

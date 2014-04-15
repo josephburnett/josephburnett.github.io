@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The first photograph"
-icon: P1
+icon: P_
 ---
 
 When I take a series of photographs, it seems the first one is usually the best.
