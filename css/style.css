@@ -217,8 +217,7 @@ p {
 }
 
 em {
-    font-style: normal;
-    text-decoration: underline;
+    font-style: italic;
     font-size: 100%;
 }
 /* Element specific styles */
@@ -407,4 +406,3 @@ em {
     padding: 0px;
     line-height: 2;
 }
-
