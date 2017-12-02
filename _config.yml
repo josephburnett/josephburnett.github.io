@@ -2,6 +2,6 @@ name: www.josephburnett.com
 description: "Joseph Burnett's personal website"
 url: "http://www.josephburnett.com"
 markdown: redcarpet
-pygments: true
+highlighter: true
 port: 8000
 permalink: /:categories/:title.html
