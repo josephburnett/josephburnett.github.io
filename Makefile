@@ -1,17 +1,12 @@
-goals = serve
-.DEFAULT_GOAL : serve
-.PHONY : $(goals)
-
+.PHONY : serve
 serve :
 	jekyll serve
 
-.ONESHELL:
-post :
-ifndef TITLE
-	$(error Set TITLE)
-else
+.PHONY : post
+.ONESHELL :
+post : assert-TITLE icon
 	TITLE=$(TITLE)
-	URL_TITLE=$(shell echo $(TITLE) | tr A-Z a-z)
+	URL_TITLE=$(shell echo $(TITLE) | tr A-Z' ' a-z'-')
 	ICON=$(shell echo $(TITLE) | head -c 1 | tr a-z A-Z)
 	DATE=$(shell date '+%Y-%m-%d')
 	FILE=weblog/_posts/$$DATE-$$URL_TITLE.md
@@ -20,4 +15,23 @@ else
 	| sed "s/ICON/$$ICON/" \
 	>> $$FILE
 	emacs $$FILE
+
+.PHONY : icon
+.ONESHELL:
+icon : assert-TITLE
+	TITLE=$(TITLE)
+	ICON=$(shell echo $(TITLE) | head -c 1 | tr a-z A-Z)
+	FILE=images/$$ICON.png
+	convert -size 100x100 canvas:white -gravity Center \
+        -font NewCenturySchlbk-Roman -pointsize 30 -kerning 2 \
+        -fill "#25e" \
+        -annotate +0+5 $$ICON \
+        -fill none -stroke "#c3b7aa" -strokewidth 1 \
+        -draw "rectangle 0,0 99,99" \
+	$$FILE
+
+.PHONY : assert-TITLE
+assert-TITLE :
+ifndef TITLE
+	$(error Set TITLE)
 endif
