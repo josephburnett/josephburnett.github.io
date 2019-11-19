@@ -4,7 +4,7 @@ serve :
 
 .PHONY : post
 .ONESHELL :
-post : assert-TITLE icon
+post : require-TITLE icon
 	TITLE=$(TITLE)
 	URL_TITLE=$(shell echo $(TITLE) | tr A-Z' ' a-z'-')
 	ICON=$(shell echo $(TITLE) | head -c 1 | tr a-z A-Z)
@@ -17,21 +17,21 @@ post : assert-TITLE icon
 	emacs $$FILE
 
 .PHONY : icon
-.ONESHELL:
-icon : assert-TITLE
+.ONESHELL :
+icon : require-TITLE
 	TITLE=$(TITLE)
 	ICON=$(shell echo $(TITLE) | head -c 1 | tr a-z A-Z)
 	FILE=images/$$ICON.png
 	convert -size 100x100 canvas:white -gravity Center \
-        -font NewCenturySchlbk-Roman -pointsize 30 -kerning 2 \
+        -font NewCenturySchlbk-Roman -pointsize 40 -kerning 2 \
         -fill "#25e" \
         -annotate +0+5 $$ICON \
         -fill none -stroke "#c3b7aa" -strokewidth 1 \
         -draw "rectangle 0,0 99,99" \
 	$$FILE
 
-.PHONY : assert-TITLE
-assert-TITLE :
+.PHONY : require-TITLE
+require-TITLE :
 ifndef TITLE
 	$(error Set TITLE)
 endif
